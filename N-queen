@@ -1,0 +1,46 @@
+def getN():
+    global N
+    N = int(input("Enter the number of queens:"))
+
+def issafe(board, row, col):            #function is called when col queens are 
+    for i in range(col):                #already placed, so we check only left side for attacking queen
+        if board[row][i]==1:                #check row
+            return False
+
+    for i, j in zip(range(row, -1, -1),  range(col, -1, -1)):    #check upper diagonal
+        if board[i][j] == 1: 
+            return False
+
+    for i, j in zip(range(row, N, 1), range(col, -1, -1)):      #check lower diagonal
+        if board[i][j] == 1: 
+            return False
+    return True
+
+def solve(board, col):
+    if col >= N:                           #if all the columns are filled already
+        return True
+    for i in range (N):
+        if issafe(board, i, col):             #if the queen is safe , update matrix by 1
+            board[i][col] = 1
+            if solve(board, col+1)==True:     #check if there is possible arrangement for the current position in the column col 
+                return True
+        board[i][col] = 0                   #if no possible arrangement found, backtrack and remove the queen
+    return False
+
+def printSolution(board): 
+    for i in range(N): 
+        for j in range(N): 
+            print (board[i][j], end = " ") 
+        print() 
+
+def queen_board(N): 
+    board = [[0 for i in range(N)] for j in range(N)]
+    if solve(board,0) == False: 
+        print ("Solution does not exist") 
+        return False
+  
+    printSolution(board) 
+    return True
+
+getN()
+queen_board(N)
